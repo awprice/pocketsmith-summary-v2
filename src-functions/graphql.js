@@ -1,5 +1,3 @@
-require('encoding');
-
 import { ApolloServer, gql } from 'apollo-server-lambda';
 import axios from 'axios';
 import get from 'lodash/get';
