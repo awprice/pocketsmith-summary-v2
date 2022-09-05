@@ -1,3 +1,4 @@
+import 'regenerator-runtime';
 import Vue from 'vue';
 import ElementUI from 'element-ui';
 import moment from 'moment';
