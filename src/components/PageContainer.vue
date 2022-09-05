@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
 import mutationTypes from '../store/types';
 
 export default {
@@ -38,9 +37,9 @@ export default {
       get() {
         return this.$store.state.app.developerKey;
       },
-      set: debounce(function (value) { // eslint-disable-line
-        this.$store.commit(`app/${mutationTypes.SET_DEVELOPER_KEY}`, value);
-      }, 1000),
+      set(value) {
+        this.$store.commit(`app/${mutationTypes.SET_DEVELOPER_KEY}`, value)
+      },
     },
   },
 };

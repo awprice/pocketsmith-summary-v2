@@ -60,6 +60,26 @@ export default {
         },
       },
       {
+        key: 'last_60_days',
+        label: 'the last 60 days',
+        dates() {
+          return {
+            start: moment().subtract(60, 'days'),
+            end: moment(),
+          };
+        },
+      },
+      {
+        key: 'last_90_days',
+        label: 'the last 90 days',
+        dates() {
+          return {
+            start: moment().subtract(90, 'days'),
+            end: moment(),
+          };
+        },
+      },
+      {
         key: 'this_month',
         label: 'this month',
         dates() {
@@ -120,6 +140,16 @@ export default {
         },
       },
       {
+        key: 'last_12_months',
+        label: 'the last 12 months',
+        dates() {
+          return {
+            start: moment().subtract(12, 'months'),
+            end: moment(),
+          };
+        },
+      },
+      {
         key: 'this_financial_year',
         label: 'this financial year',
         dates: function () {
@@ -132,6 +162,16 @@ export default {
         dates: function () {
           return this.CalculateFinancialYear(moment().subtract(1, 'year'));
         }.bind(this),
+      },
+      {
+        key: 'all_time',
+        label: 'all time',
+        dates() {
+          return {
+            start: moment("01 Jan 1970"),
+            end: moment(),
+          };
+        },
       },
     ];
   },

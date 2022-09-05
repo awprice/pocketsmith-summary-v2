@@ -83,6 +83,7 @@ export default {
                 is_transfer
                 date
                 payee
+                note
                 category {
                   id
                   title

@@ -19,16 +19,13 @@
       <el-table-column
         label="Amount"
         prop="amount"
+        width="150"
         sortable
       >
         <template slot-scope="props">
-          <amount :amount="props.row.amount"/>
+          <strong><amount :amount="props.row.amount"/></strong>
         </template>
       </el-table-column>
-      <el-table-column
-        label="Percentage Change"
-        sortable
-      />
     </el-table>
   </div>
 </template>

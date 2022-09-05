@@ -37,10 +37,8 @@ export default function createProvider(options = {}) {
   const { apolloClient } = createApolloClient({
     ...defaultOptions,
     ...options,
+    link: authMiddleware,
   });
-
-  // inject the auth middleware
-  apolloClient.link = authMiddleware.concat(apolloClient.link);
 
   // Create vue apollo provider
   return new VueApollo({

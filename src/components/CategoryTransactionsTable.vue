@@ -7,10 +7,12 @@
       prop="date"
       width="150"
     />
-    <el-table-column
-      label="Merchant"
-      prop="payee"
-    />
+    <el-table-column label="Merchant">
+      <template slot-scope="props">
+        <strong>{{ props.row.payee }}</strong><br>
+        {{ props.row.note }}
+      </template>
+    </el-table-column>
     <el-table-column
       label="Amount"
       prop="amount"
