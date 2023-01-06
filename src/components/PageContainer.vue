@@ -6,12 +6,6 @@
           <div>
             <h2 class="title">Pocketsmith Summary</h2>
             <div class="refresh-button-holder">
-              <el-button
-                icon="mdi-refresh"
-                type="primary"
-                size="small"
-                class="refresh-button"
-              >Refresh</el-button>
             </div>
           </div>
           <el-input

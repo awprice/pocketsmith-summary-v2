@@ -168,7 +168,7 @@ export default {
         label: 'all time',
         dates() {
           return {
-            start: moment("01 Jan 1970"),
+            start: moment("1970-01-01"),
             end: moment(),
           };
         },
