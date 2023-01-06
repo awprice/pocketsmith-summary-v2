@@ -246,6 +246,9 @@ export default {
       categoryMap[category.id].transactions.push(transaction);
     });
     Object.keys(categoryMap).forEach((categoryID) => {
+      categoryMap[categoryID].transactions.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      })
       results.push(categoryMap[categoryID]);
     });
     return results;

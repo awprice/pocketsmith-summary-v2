@@ -5,6 +5,7 @@
       :data="categorySummaries"
       :default-sort="{prop: 'amount', order: 'descending'}"
       v-loading="loading"
+      :element-loading-text="loadingText"
     >
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -37,6 +38,10 @@ import Amount from './AmountText';
 export default {
   name: 'TransactionsTable',
   props: {
+    loadingText: {
+      type: String,
+      required: true,
+    },
     categorySummaries: {
       type: Array,
       required: true,

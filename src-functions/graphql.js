@@ -99,11 +99,12 @@ const transactions = async (parent, {end_date, start_date, page}, context) => { 
         };
     }
     const links = parseLinkHeader(get(res, 'headers.link', ''));
-    const nextUrl = get(links, 'next.url', null);
+    const lastLink = get(links, 'last', {});
+    const lastPage = get(lastLink, 'page', 1);
     return {
         transactions: res.data,
         pageInfo: {
-            lastPage: nextUrl === null,
+            lastPage: lastPage,
         }
     }
 };

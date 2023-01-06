@@ -9,7 +9,7 @@ type TransactionResult {
 }
 
 type PageInfo {
-    lastPage: Boolean!
+    lastPage: Int!
 }
 
 type Transaction {

@@ -1,19 +1,20 @@
 <template>
   <div :dummy="transactionsTrigger">
     <transactions-table
-      :loading="loading"
-      :category-summaries="categorySummaries"
-      :query-start-date-moment="queryStartDateMoment"
-      :query-end-date-moment="queryEndDateMoment"
+        :loading="loading"
+        :loading-text="loadingText"
+        :category-summaries="categorySummaries"
+        :query-start-date-moment="queryStartDateMoment"
+        :query-end-date-moment="queryEndDateMoment"
     />
     <summary-panel
-      v-if="!loading"
-      :category-summaries="categorySummaries"
-      :query-start-date-moment="queryStartDateMoment"
-      :query-end-date-moment="queryEndDateMoment"
+        v-if="!loading"
+        :category-summaries="categorySummaries"
+        :query-start-date-moment="queryStartDateMoment"
+        :query-end-date-moment="queryEndDateMoment"
     />
     <chart-panel
-      :category-summaries="categorySummaries"
+        :category-summaries="categorySummaries"
     />
   </div>
 </template>
@@ -21,7 +22,7 @@
 <script>
 import gql from 'graphql-tag';
 import moment from 'moment';
-import { mapGetters } from 'vuex';
+import {mapGetters} from 'vuex';
 import get from 'lodash/get';
 import TransactionAnalysisHelper from '../helpers/TransactionAnalysis';
 import TransactionsTable from './TransactionsTable';
@@ -30,9 +31,11 @@ import ChartPanel from './ChartPanel';
 
 export default {
   name: 'TransactionAnalysisHolder',
-  components: { ChartPanel, SummaryPanel, TransactionsTable },
+  components: {ChartPanel, SummaryPanel, TransactionsTable},
   data: function () {
     return {
+      complete: 0,
+      total: 0,
       transactions: [],
       loading: false,
     }
@@ -68,11 +71,11 @@ export default {
      */
     categorySummaries() {
       return TransactionAnalysisHelper.GetCategorySummaries(
-        this.transactions,
-        this.queryEndDateMoment,
-        this.queryStartDateMoment,
-        true,
-        true
+          this.transactions,
+          this.queryEndDateMoment,
+          this.queryStartDateMoment,
+          true,
+          true
       );
     },
 
@@ -80,17 +83,45 @@ export default {
       this.fetchTransactions();
       return this.compareDates;
     },
+
+    loadingText() {
+      if (this.total === 0) {
+        return "Loading..."
+      }
+      return `Loaded ${this.complete} out of ${this.total}`;
+    }
   },
   methods: {
     async fetchTransactions() {
+      this.complete = 0;
+      this.total = 0;
       this.loading = true;
-      let page = 0;
-      let lastPage = false;
-      let transactions = [];
-      while (!lastPage) {
-        page++;
-        const res = await this.$apollo.query({
-          query: gql`
+      const firstPage = await this.fetchPageInfo(1);
+      const lastPage = firstPage.pageInfo.lastPage;
+      this.total = lastPage;
+      this.transactions = await this.fetchMultiplePages(lastPage);
+      this.loading = false;
+    },
+
+    async fetchMultiplePages(endPage) {
+      const promises = [];
+      for (let i = 1; i <= endPage; i++) {
+        promises.push(this.fetchPagePromise(i).then((res) => {
+          this.complete++;
+          return res;
+        }))
+      }
+      const result = await Promise.all(promises);
+      const transactions = [];
+      result.forEach((r) => {
+        transactions.push(...get(r, 'data.user.transactions.transactions', []));
+      })
+      return transactions;
+    },
+
+    fetchPagePromise(page) {
+      return this.$apollo.query({
+        query: gql`
             query user($end_date: String!, $start_date: String!, $page: Int!) {
               user {
                 id
@@ -113,19 +144,21 @@ export default {
                 }
               }
             }`,
-          variables: {
-            page,
-            end_date: this.queryEndDateMoment.format('YYYY-MM-DD'),
-            start_date: this.queryStartDateMoment.format('YYYY-MM-DD'),
-          }
-        })
-        const newTransactions = get(res, 'data.user.transactions.transactions', []);
-        const newLastPage = get(res, 'data.user.transactions.pageInfo.lastPage', true);
-        transactions.push(...newTransactions);
-        lastPage = newLastPage;
-      }
-      this.loading = false;
-      this.transactions = transactions;
+        variables: {
+          page,
+          end_date: this.queryEndDateMoment.format('YYYY-MM-DD'),
+          start_date: this.queryStartDateMoment.format('YYYY-MM-DD'),
+        }
+      })
+    },
+
+    async fetchPageInfo(page) {
+      const res = await this.fetchPagePromise(page);
+      return get(res, 'data.user.transactions', {
+        pageInfo: {
+          lastPage: 1,
+        }
+      })
     }
   }
 };
