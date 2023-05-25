@@ -9,4 +9,11 @@ module.exports = defineConfig({
       new NodePolyfillPlugin(),
     ],
   },
+  devServer: {
+    proxy: {
+      '/.netlify': {
+        target: 'http://localhost:9000',
+      },
+    },
+  },
 });

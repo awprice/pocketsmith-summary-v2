@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "BROWSER=none netlify serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dev": "vue-cli-service serve & BROWSER=none netlify serve --functions-port=9000"
   },
   "dependencies": {
     "@graphql-tools/load-files": "^7.0.0",
