@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Amount from './AmountText';
+import Amount from './AmountText.vue';
 
 export default {
   name: 'SummaryPanel',

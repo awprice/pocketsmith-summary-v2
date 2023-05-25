@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import AmountText from './AmountText';
+import AmountText from './AmountText.vue';
 
 export default {
   name: 'CategoryTransactionsTable',

@@ -1,20 +1,25 @@
 <template>
   <div class="controls-holder">
-    <div>
-      <h3>Compare</h3>
-      <el-select
-        v-model="compareValue"
-        placeholder="Select"
-        class="comparison-input"
-      >
-        <el-option
-          v-for="item in compareOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key">
-        </el-option>
-      </el-select>
-    </div>
+    <el-row>
+      <el-col :span="12">
+        <h3>Compare</h3>
+        <el-select
+          v-model="compareValue"
+          placeholder="Select"
+          class="comparison-input"
+        >
+          <el-option
+            v-for="item in compareOptions"
+            :key="item.key"
+            :label="item.label"
+            :value="item.key">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="12" class="right-column-holder">
+        <el-button>Export category totals to CSV</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -56,5 +61,9 @@ export default {
   .comparison-input {
     display: inline-block;
     margin-left: 10px;
+  }
+
+  .right-column-holder {
+    text-align: right;
   }
 </style>

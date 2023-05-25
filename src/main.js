@@ -17,5 +17,5 @@ moment.locale(window.navigator.userLanguage || window.navigator.language);
 new Vue({
   apolloProvider: createProvider(),
   store,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');

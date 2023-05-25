@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import PieChart from './PieChart';
+import PieChart from './PieChart.vue';
 
 export default {
   name: 'ChartPanel',

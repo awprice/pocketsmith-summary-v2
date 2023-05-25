@@ -1,44 +1,50 @@
 <template>
-  <div :dummy="transactionsTrigger">
-    <transactions-table
+  <div>
+    <controls-holder/>
+    <div :dummy="transactionsTrigger">
+      <transactions-table
         :loading="loading"
         :loading-text="loadingText"
         :category-summaries="categorySummaries"
         :query-start-date-moment="queryStartDateMoment"
         :query-end-date-moment="queryEndDateMoment"
-    />
-    <summary-panel
+      />
+      <summary-panel
         v-if="!loading"
         :category-summaries="categorySummaries"
         :query-start-date-moment="queryStartDateMoment"
         :query-end-date-moment="queryEndDateMoment"
-    />
-    <chart-panel
+      />
+      <chart-panel
         :category-summaries="categorySummaries"
-    />
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import gql from 'graphql-tag';
 import moment from 'moment';
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import get from 'lodash/get';
 import TransactionAnalysisHelper from '../helpers/TransactionAnalysis';
-import TransactionsTable from './TransactionsTable';
-import SummaryPanel from './SummaryPanel';
-import ChartPanel from './ChartPanel';
+import TransactionsTable from './TransactionsTable.vue';
+import SummaryPanel from './SummaryPanel.vue';
+import ChartPanel from './ChartPanel.vue';
+import ControlsHolder from './ControlsHolder.vue';
 
 export default {
   name: 'TransactionAnalysisHolder',
-  components: {ChartPanel, SummaryPanel, TransactionsTable},
-  data: function () {
+  components: {
+    ControlsHolder, ChartPanel, SummaryPanel, TransactionsTable,
+  },
+  data() {
     return {
       complete: 0,
       total: 0,
       transactions: [],
       loading: false,
-    }
+    };
   },
   computed: {
     ...mapGetters({
@@ -71,11 +77,11 @@ export default {
      */
     categorySummaries() {
       return TransactionAnalysisHelper.GetCategorySummaries(
-          this.transactions,
-          this.queryEndDateMoment,
-          this.queryStartDateMoment,
-          true,
-          true
+        this.transactions,
+        this.queryEndDateMoment,
+        this.queryStartDateMoment,
+        true,
+        true,
       );
     },
 
@@ -86,10 +92,10 @@ export default {
 
     loadingText() {
       if (this.total === 0) {
-        return "Loading..."
+        return 'Loading...';
       }
       return `Loaded ${this.complete} out of ${this.total}`;
-    }
+    },
   },
   methods: {
     async fetchTransactions() {
@@ -97,7 +103,7 @@ export default {
       this.total = 0;
       this.loading = true;
       const firstPage = await this.fetchPageInfo(1);
-      const lastPage = firstPage.pageInfo.lastPage;
+      const { lastPage } = firstPage.pageInfo;
       this.total = lastPage;
       this.transactions = await this.fetchMultiplePages(lastPage);
       this.loading = false;
@@ -105,17 +111,17 @@ export default {
 
     async fetchMultiplePages(endPage) {
       const promises = [];
-      for (let i = 1; i <= endPage; i++) {
+      for (let i = 1; i <= endPage; i += 1) {
         promises.push(this.fetchPagePromise(i).then((res) => {
-          this.complete++;
+          this.complete += 1;
           return res;
-        }))
+        }));
       }
       const result = await Promise.all(promises);
       const transactions = [];
       result.forEach((r) => {
         transactions.push(...get(r, 'data.user.transactions.transactions', []));
-      })
+      });
       return transactions;
     },
 
@@ -148,8 +154,8 @@ export default {
           page,
           end_date: this.queryEndDateMoment.format('YYYY-MM-DD'),
           start_date: this.queryStartDateMoment.format('YYYY-MM-DD'),
-        }
-      })
+        },
+      });
     },
 
     async fetchPageInfo(page) {
@@ -157,9 +163,9 @@ export default {
       return get(res, 'data.user.transactions', {
         pageInfo: {
           lastPage: 1,
-        }
-      })
-    }
-  }
+        },
+      });
+    },
+  },
 };
 </script>

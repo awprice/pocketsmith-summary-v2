@@ -11,8 +11,8 @@ const initialState = () => ({
 
 const state = initialState();
 const getters = {
-  developerKey: state => state.developerKey,
-  compareOption: state => state.compareOption,
+  developerKey: (state) => state.developerKey,
+  compareOption: (state) => state.compareOption,
 };
 const actions = {};
 const mutations = {

@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import CategoryTransactionTable from './CategoryTransactionsTable';
-import Amount from './AmountText';
+import CategoryTransactionTable from './CategoryTransactionsTable.vue';
+import Amount from './AmountText.vue';
 
 export default {
   name: 'TransactionsTable',

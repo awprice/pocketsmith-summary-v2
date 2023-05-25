@@ -32,7 +32,7 @@ export default {
         return this.$store.state.app.developerKey;
       },
       set(value) {
-        this.$store.commit(`app/${mutationTypes.SET_DEVELOPER_KEY}`, value)
+        this.$store.commit(`app/${mutationTypes.SET_DEVELOPER_KEY}`, value);
       },
     },
   },

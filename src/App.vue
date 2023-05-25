@@ -2,7 +2,6 @@
   <div id="app">
     <page>
       <div v-if="developerKey">
-        <controls/>
         <transaction-analysis-holder/>
       </div>
       <div v-if="!developerKey" class="text-center">
@@ -18,9 +17,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Page from './components/PageContainer';
-import Controls from './components/ControlsHolder';
-import TransactionAnalysisHolder from './components/TransactionAnalysisHolder';
+import Page from './components/PageContainer.vue';
+import TransactionAnalysisHolder from './components/TransactionAnalysisHolder.vue';
 
 export default {
   name: 'app',
@@ -40,7 +38,6 @@ export default {
   components: {
     TransactionAnalysisHolder,
     Page,
-    Controls,
   },
 };
 </script>

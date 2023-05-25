@@ -152,6 +152,7 @@ export default {
       {
         key: 'this_financial_year',
         label: 'this financial year',
+        // eslint-disable-next-line func-names
         dates: function () {
           return this.CalculateFinancialYear(moment());
         }.bind(this),
@@ -159,6 +160,7 @@ export default {
       {
         key: 'last_financial_year',
         label: 'last financial year',
+        // eslint-disable-next-line func-names
         dates: function () {
           return this.CalculateFinancialYear(moment().subtract(1, 'year'));
         }.bind(this),
@@ -168,7 +170,7 @@ export default {
         label: 'all time',
         dates() {
           return {
-            start: moment("1970-01-01"),
+            start: moment('1970-01-01'),
             end: moment(),
           };
         },
@@ -185,7 +187,7 @@ export default {
     const currentFQuarter = momentFquarter(currentDate).fquarter(7);
     const start = moment(currentDate).subtract(currentFQuarter.quarter - 1, 'quarter').startOf('quarter');
     const end = moment(currentDate).add(4 - currentFQuarter.quarter, 'quarter').endOf('quarter');
-    return {start, end };
+    return { start, end };
   },
 
   /**
@@ -194,10 +196,9 @@ export default {
    * @constructor
    */
   GetCompareDateRange(key) {
-    const o = this.GetCompareOptions().find(option => option.key === key);
+    const o = this.GetCompareOptions().find((option) => option.key === key);
     return o.dates();
   },
-
 
   /**
    * @param transactions
@@ -246,9 +247,7 @@ export default {
       categoryMap[category.id].transactions.push(transaction);
     });
     Object.keys(categoryMap).forEach((categoryID) => {
-      categoryMap[categoryID].transactions.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-      })
+      categoryMap[categoryID].transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
       results.push(categoryMap[categoryID]);
     });
     return results;

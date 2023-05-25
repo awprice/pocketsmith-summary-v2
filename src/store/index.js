@@ -11,7 +11,7 @@ const debug = process.env.NODE_ENV !== 'production';
 const plugins = [
   createPersistedState({
     key: 'vuex/pocketsmith-summary',
-    reducer: state => cloneDeep(state),
+    reducer: (state) => cloneDeep(state),
   }),
 ];
 
