@@ -1,12 +1,12 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+
 module.exports = defineConfig({
   transpileDependencies: true,
-  devServer: {
-    proxy: {
-      '/.netlify': {
-        target: 'http://localhost:9000',
-        pathRewrite: { '^/.netlify/functions': '' },
-      },
-    },
-  }
-})
+  lintOnSave: false,
+  configureWebpack: {
+    plugins: [
+      new NodePolyfillPlugin(),
+    ],
+  },
+});
