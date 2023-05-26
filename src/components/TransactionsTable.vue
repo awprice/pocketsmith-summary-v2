@@ -27,6 +27,25 @@
           <strong><amount :amount="props.row.amount"/></strong>
         </template>
       </el-table-column>
+      <el-table-column
+        label="Budget"
+        prop="budget"
+        width="150"
+        sortable
+      >
+        <template slot-scope="props">
+          <div v-if="props.row.budget">
+            <budget-amount
+              v-if="props.row.budget.expense"
+              :budget="props.row.budget.expense"
+            />
+            <budget-amount
+              v-if="props.row.budget.income"
+              :budget="props.row.budget.income"
+            />
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -34,6 +53,7 @@
 <script>
 import CategoryTransactionTable from './CategoryTransactionsTable.vue';
 import Amount from './AmountText.vue';
+import BudgetAmount from './BudgetAmount.vue';
 
 export default {
   name: 'TransactionsTable',
@@ -58,6 +78,7 @@ export default {
     },
   },
   components: {
+    BudgetAmount,
     Amount,
     CategoryTransactionTable,
   },

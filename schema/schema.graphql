@@ -1,11 +1,12 @@
 type User {
-    id: Int
-    transactions(end_date: String!, start_date: String!, page: Int!): TransactionResult
+    id: Int!
+    transactions(end_date: String!, start_date: String!, page: Int!): TransactionResult!
+    budgets: [Budget]!
 }
 
 type TransactionResult {
-    transactions: [Transaction]
-    pageInfo: PageInfo
+    transactions: [Transaction]!
+    pageInfo: PageInfo!
 }
 
 type PageInfo {
@@ -13,35 +14,70 @@ type PageInfo {
 }
 
 type Transaction {
-    id: Int
-    date: String
-    payee: String
-    original_payee: String
-    upload_source: String
-    amount: Float
-    type: String
+    id: Int!
+    date: String!
+    payee: String!
+    original_payee: String!
+    upload_source: String!
+    amount: Float!
+    type: String!
     memo: String
     category: Category
     transaction_account: TransactionAccount
     note: String
-    status: String
+    status: String!
     is_transfer: Boolean
-    labels: [String]
+    labels: [String]!
+}
+
+type Budget {
+    category: Category!
+    is_transfer: Boolean!
+    expense: BudgetDetails
+    income: BudgetDetails
+}
+
+type BudgetDetails {
+    start_date: String!
+    end_date: String!
+    currency_code: String!
+    total_actual_amount: Float!
+    average_actual_amount: Float!
+    total_forecast_amount: Float!
+    average_forecast_amount: Float!
+    total_under_by: Float!
+    total_over_by: Float!
+    periods: [BudgetPeriod]!
+}
+
+type BudgetPeriod {
+    start_date: String!
+    end_date: String!
+    currency_code: String!
+    actual_amount: Float!
+    forecast_amount: Float!
+    refund_amount: Float!
+    current: Boolean!
+    over_budget: Boolean!
+    under_budget: Boolean!
+    over_by: Float!
+    under_by: Float!
+    percentage_used: Float!
 }
 
 type Category {
-    id: Int
-    title: String
-    is_transfer: Boolean
+    id: Int!
+    title: String!
+    is_transfer: Boolean!
     colour: String
 }
 
 type TransactionAccount {
-    id: Int
-    name: String
-    number: String
+    id: Int!
+    name: String!
+    number: String!
 }
 
 type Query {
-    user: User
+    user: User!
 }

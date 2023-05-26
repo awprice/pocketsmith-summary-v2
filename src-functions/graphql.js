@@ -89,7 +89,7 @@ const transactions = async (parent, {end_date, start_date, page}, context) => { 
   const url = `${endpoint}/v2/users/${parent.id}/transactions?per_page=${pageSize}&end_date=${end_date}&start_date=${start_date}&page=${page}`; // eslint-disable-line
   let res;
   try {
-    res = await pocketsmithGetResult(context.token, url, 360);
+    res = await pocketsmithGetResult(context.token, url, 300);
   } catch (err) {
     return {
       transactions: [],
@@ -109,12 +109,19 @@ const transactions = async (parent, {end_date, start_date, page}, context) => { 
   };
 };
 
+const budgets = async (parent, args, context) => {
+  const url = `${endpoint}/v2/users/${parent.id}/budget`;
+  const res = await pocketsmithGetResult(context.token, url, 300);
+  return res.data;
+};
+
 const resolvers = {
   Query: {
     user,
   },
   User: {
     transactions,
+    budgets,
   },
 };
 

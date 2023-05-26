@@ -202,6 +202,7 @@ export default {
 
   /**
    * @param transactions
+   * @param budgets
    * @param {moment.Moment} endDate
    * @param {moment.Moment} startDate
    * @param ignorePending
@@ -209,7 +210,7 @@ export default {
    * @returns {Array}
    * @constructor
    */
-  GetCategorySummaries(transactions, endDate, startDate, ignorePending, ignoreTransfers) {
+  GetCategorySummaries(transactions, budgets, endDate, startDate, ignorePending, ignoreTransfers) {
     const categoryMap = {};
     const results = [];
     transactions.filter((transaction) => {
@@ -241,11 +242,13 @@ export default {
           title: category.title,
           amount: 0,
           transactions: [],
+          budget: budgets.find((b) => b.category.id === category.id),
         };
       }
       categoryMap[category.id].amount += transaction.amount;
       categoryMap[category.id].transactions.push(transaction);
     });
+    console.log(categoryMap);
     Object.keys(categoryMap).forEach((categoryID) => {
       categoryMap[categoryID].transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
       results.push(categoryMap[categoryID]);

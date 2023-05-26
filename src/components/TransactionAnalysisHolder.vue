@@ -1,7 +1,7 @@
 <template>
   <div>
     <controls-holder/>
-    <div :dummy="transactionsTrigger">
+    <div :dummy="dataTrigger">
       <transactions-table
         :loading="loading"
         :loading-text="loadingText"
@@ -43,6 +43,7 @@ export default {
       complete: 0,
       total: 0,
       transactions: [],
+      budgets: [],
       loading: false,
     };
   },
@@ -78,6 +79,7 @@ export default {
     categorySummaries() {
       return TransactionAnalysisHelper.GetCategorySummaries(
         this.transactions,
+        this.budgets,
         this.queryEndDateMoment,
         this.queryStartDateMoment,
         true,
@@ -85,8 +87,8 @@ export default {
       );
     },
 
-    transactionsTrigger() {
-      this.fetchTransactions();
+    dataTrigger() {
+      this.fetchData();
       return this.compareDates;
     },
 
@@ -98,21 +100,28 @@ export default {
     },
   },
   methods: {
+    async fetchData() {
+      this.loading = true;
+      await Promise.all([
+        this.fetchTransactions(),
+        this.fetchBudgets(),
+      ]);
+      this.loading = false;
+    },
+
     async fetchTransactions() {
       this.complete = 0;
       this.total = 0;
-      this.loading = true;
       const firstPage = await this.fetchPageInfo(1);
       const { lastPage } = firstPage.pageInfo;
       this.total = lastPage;
       this.transactions = await this.fetchMultiplePages(lastPage);
-      this.loading = false;
     },
 
     async fetchMultiplePages(endPage) {
       const promises = [];
       for (let i = 1; i <= endPage; i += 1) {
-        promises.push(this.fetchPagePromise(i).then((res) => {
+        promises.push(this.fetchTransactionPagePromise(i).then((res) => {
           this.complete += 1;
           return res;
         }));
@@ -125,7 +134,7 @@ export default {
       return transactions;
     },
 
-    fetchPagePromise(page) {
+    fetchTransactionPagePromise(page) {
       return this.$apollo.query({
         query: gql`
             query user($end_date: String!, $start_date: String!, $page: Int!) {
@@ -159,12 +168,40 @@ export default {
     },
 
     async fetchPageInfo(page) {
-      const res = await this.fetchPagePromise(page);
+      const res = await this.fetchTransactionPagePromise(page);
       return get(res, 'data.user.transactions', {
         pageInfo: {
           lastPage: 1,
         },
       });
+    },
+
+    async fetchBudgets() {
+      const result = await this.$apollo.query({
+        query: gql`
+            query {
+                user {
+                   id
+                   budgets {
+                        category {
+                            id
+                        }
+                        income {
+                            start_date
+                            end_date
+                            total_forecast_amount
+                        }
+                        expense {
+                            start_date
+                            end_date
+                            total_forecast_amount
+                        }
+                   }
+                }
+            }
+        `,
+      });
+      this.budgets = get(result, 'data.user.budgets', []);
     },
   },
 };
