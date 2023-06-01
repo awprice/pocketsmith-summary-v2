@@ -1,6 +1,8 @@
 <template>
   <div>
-    <controls-holder/>
+    <controls-holder
+      v-on:export-to-csv="exportToCSV"
+    />
     <div :dummy="dataTrigger">
       <transactions-table
         :loading="loading"
@@ -202,6 +204,28 @@ export default {
         `,
       });
       this.budgets = get(result, 'data.user.budgets', []);
+    },
+
+    exportToCSV() {
+      const rows = [[
+        'id', 'title', 'amount', 'budget',
+      ]];
+      this.categorySummaries.forEach((summary) => {
+        const budget = get(
+          summary,
+          'budget.expense.total_forecast_amount',
+          get(summary, 'budget.income.total_forecast_amount', 0),
+        );
+        rows.push([
+          summary.id,
+          summary.title,
+          summary.amount,
+          budget,
+        ]);
+      });
+      const csvContent = `data:text/csv;charset=utf-8,${rows.map((e) => e.join(',')).join('\n')}`;
+      const encodedUri = encodeURI(csvContent);
+      window.open(encodedUri);
     },
   },
 };

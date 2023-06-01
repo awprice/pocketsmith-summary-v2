@@ -17,7 +17,7 @@
         </el-select>
       </el-col>
       <el-col :span="12" class="right-column-holder">
-        <el-button>Export category totals to CSV</el-button>
+        <el-button v-on:click="exportToCSV">Export category totals to CSV</el-button>
       </el-col>
     </el-row>
   </div>
@@ -43,6 +43,11 @@ export default {
       set(value) {
         this.$store.commit(`app/${mutationTypes.SET_COMPARE_OPTION}`, value);
       },
+    },
+  },
+  methods: {
+    exportToCSV() {
+      this.$emit('export-to-csv');
     },
   },
 };

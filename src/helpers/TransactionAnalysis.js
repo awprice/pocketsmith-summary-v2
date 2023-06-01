@@ -248,7 +248,6 @@ export default {
       categoryMap[category.id].amount += transaction.amount;
       categoryMap[category.id].transactions.push(transaction);
     });
-    console.log(categoryMap);
     Object.keys(categoryMap).forEach((categoryID) => {
       categoryMap[categoryID].transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
       results.push(categoryMap[categoryID]);
