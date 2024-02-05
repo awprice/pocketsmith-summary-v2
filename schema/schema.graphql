@@ -11,6 +11,7 @@ type TransactionResult {
 
 type PageInfo {
     lastPage: Int!
+    page: Int!
 }
 
 type Transaction {

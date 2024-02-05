@@ -157,6 +157,7 @@ export default {
                     }
                     pageInfo {
                         lastPage
+                        page
                     }
                 }
               }

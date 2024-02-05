@@ -7,7 +7,7 @@ import crypto from 'crypto';
 import { loadFilesSync } from '@graphql-tools/load-files';
 
 const endpoint = 'https://api.pocketsmith.com';
-const pageSize = 100;
+const pageSize = 200;
 const cachePath = '/tmp/cache';
 
 /**
@@ -15,20 +15,26 @@ const cachePath = '/tmp/cache';
  * @param url
  * @returns {string}
  */
-const getRequestKey = (token, url) => crypto.createHash('md5').update(`${token}:${url}`).digest('hex');
+const getRequestKey = (token, url) => crypto.createHash('md5')
+  .update(`${token}:${url}`)
+  .digest('hex');
 
 /**
  * @param key
- * @returns {Q.Promise<any>}
+ * @returns {Promise<*|null>}
  */
-const getCachedResult = (key) => cacache.get(cachePath, key)
-  .then((res) => {
-    if (res.metadata.expiry < Date.now()) {
-      return null;
-    }
-    return res.data;
-  })
-  .catch(() => null);
+const getCachedResult = async (key) => {
+  let res;
+  try {
+    res = await cacache.get(cachePath, key);
+  } catch (err) {
+    return null;
+  }
+  if (res.metadata.expiry < Date.now()) {
+    return null;
+  }
+  return res.data;
+};
 
 /**
  * @param key
@@ -60,7 +66,10 @@ const pocketsmithGetResult = async (token, url, expiry) => {
   };
   console.log(`Sending request to ${url}`); // eslint-disable-line
   const result = await axios(url, { headers });
-  const data = { data: result.data, headers: result.headers };
+  const data = {
+    data: result.data,
+    headers: result.headers,
+  };
   await setCachedResult(key, data, expiry);
   return data;
 };
@@ -105,6 +114,7 @@ const transactions = async (parent, {end_date, start_date, page}, context) => { 
     transactions: res.data,
     pageInfo: {
       lastPage,
+      page,
     },
   };
 };
@@ -129,7 +139,10 @@ const server = new ApolloServer({
   typeDefs: loadFilesSync('schema/schema.graphql'),
   resolvers,
   introspection: true,
-  context: ({ event, context }) => ({
+  context: ({
+    event,
+    context,
+  }) => ({
     token: get(event, 'headers.x-developer-key', ''),
     event,
     context,
