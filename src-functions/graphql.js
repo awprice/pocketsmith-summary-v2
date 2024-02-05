@@ -110,12 +110,14 @@ const transactions = async (parent, {end_date, start_date, page}, context) => { 
   const links = parseLinkHeader(get(res, 'headers.link', ''));
   const lastLink = get(links, 'last', {});
   const lastPage = get(lastLink, 'page', 1);
+  const pageInfo = {
+    lastPage,
+    page,
+  };
+  console.log(pageInfo);
   return {
     transactions: res.data,
-    pageInfo: {
-      lastPage,
-      page,
-    },
+    pageInfo,
   };
 };
 
