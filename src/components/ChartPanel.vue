@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="chart-header">
-          <h3>Earnings</h3>
+          <h3>Incoming</h3>
         </div>
         <pie-chart
           class="chart"
@@ -14,7 +14,7 @@
       </el-col>
       <el-col :span="12">
         <div class="chart-header">
-          <h3>Spendings</h3>
+          <h3>Outgoing</h3>
         </div>
         <pie-chart
           class="chart"

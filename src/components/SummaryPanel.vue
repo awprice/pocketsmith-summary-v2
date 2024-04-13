@@ -10,12 +10,12 @@
         </div>
       </el-col>
       <el-col :span="6">
-        <h3 class="earnt"><amount :amount="totals.earnt"/></h3>
-        <p class="subtitle">Earnt</p>
+        <h3 class="incoming"><amount :amount="totals.incoming"/></h3>
+        <p class="subtitle">Incoming</p>
       </el-col>
       <el-col :span="6">
-        <h3 class="spent"><amount :amount="totals.spent"/></h3>
-        <p class="subtitle">Spent</p>
+        <h3 class="outgoing"><amount :amount="totals.outgoing"/></h3>
+        <p class="subtitle">Outgoing</p>
       </el-col>
       <el-col :span="6"></el-col>
     </el-row>
@@ -41,18 +41,16 @@ export default {
   },
   computed: {
     totals() {
-      let spent = 0;
-      let earnt = 0;
+      let outgoing = 0;
+      let incoming = 0;
       this.categorySummaries.forEach((summary) => {
-        summary.transactions.forEach((transaction) => {
-          if (transaction.amount <= 0) {
-            spent += transaction.amount;
-          } else {
-            earnt += transaction.amount;
-          }
-        });
+        if (summary.amount <= 0) {
+          outgoing += summary.amount;
+        } else {
+          incoming += summary.amount;
+        }
       });
-      return { spent, earnt };
+      return { incoming, outgoing };
     },
   },
   components: {
@@ -76,11 +74,11 @@ export default {
     margin: 5px 0 0;
   }
 
-  .earnt {
+  .incoming {
     color: #00e676;
   }
 
-  .spent {
+  .outgoing {
     color: #ff1744;
   }
 </style>

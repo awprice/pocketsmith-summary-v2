@@ -4,7 +4,7 @@
       v-on:export-to-csv="exportToCSV"
     />
     <div :dummy="dataTrigger">
-      <transactions-table
+      <categories-table
         :loading="loading"
         :loading-text="loadingText"
         :category-summaries="categorySummaries"
@@ -20,6 +20,9 @@
       <chart-panel
         :category-summaries="categorySummaries"
       />
+      <all-transactions-panel
+        :transactions="transactions"
+      />
     </div>
   </div>
 </template>
@@ -30,15 +33,20 @@ import moment from 'moment';
 import { mapGetters } from 'vuex';
 import get from 'lodash/get';
 import TransactionAnalysisHelper from '../helpers/TransactionAnalysis';
-import TransactionsTable from './TransactionsTable.vue';
+import CategoriesTable from './CategoriesTable.vue';
 import SummaryPanel from './SummaryPanel.vue';
 import ChartPanel from './ChartPanel.vue';
 import ControlsHolder from './ControlsHolder.vue';
+import AllTransactionsPanel from './AllTransactionsPanel.vue';
 
 export default {
   name: 'TransactionAnalysisHolder',
   components: {
-    ControlsHolder, ChartPanel, SummaryPanel, TransactionsTable,
+    ControlsHolder,
+    ChartPanel,
+    SummaryPanel,
+    CategoriesTable,
+    AllTransactionsPanel,
   },
   data() {
     return {
